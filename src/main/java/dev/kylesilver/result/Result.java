@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public interface Result<T, E> {
 
@@ -204,8 +205,51 @@ public interface Result<T, E> {
      */
     void match(Consumer<T> ifOk, Consumer<E> ifErr);
 
+    /**
+     * Apply a transformation to the wrapped value if the result is {@link Ok}.
+     * If the result is an {@link Err}, no transformation will be applied.
+     * <pre>{@code
+     * assertEquals(
+     *     6,
+     *     Result.ok(5).map(x -> x + 1).unwrap()
+     * );
+     * assertEquals(
+     *     "error",
+     *     Result.<Integer, String>err("error").map(x -> x + 1).unwrapErr()
+     * );
+     * }</pre>
+     * @param mapping
+     *      the transformation to apply to the wrapped value if the result is
+     *      {@link Ok}.
+     * @param <U>
+     *      the type of the output of the transformation.
+     * @return
+     *      a new {@link Result} containing either the transformed value or the
+     *      original error.
+     */
     <U> Result<U, E> map(Function<T, U> mapping);
 
+    /**
+     * Apply a transformation to the wrapped value if the result is an
+     * {@link Err}. If the result is {@link Ok}, no transformation will be
+     * applied.
+     * assertEquals(
+     *     "error: 'foo'",
+     *      Result.err("foo").mapErr(err -> String.format("error: '%s'", err)).unwrapErr()
+     * );
+     * assertEquals(
+     *     5,
+     *     Result.ok(5).mapErr(err -> String.format("error: '%s'", err)).unwrap()
+     * );
+     * @param mapping
+     *      the transformation to apply to the wrapped value if the result is an
+     *      {@link Err}.
+     * @param <F>
+     *      the type of the output of the transformation.
+     * @return
+     *      a new {@link Result} containing either the transformed error or the
+     *      original value.
+     */
     <F> Result<T, F> mapErr(Function<E, F>  mapping);
 
     default <U> Result<U, E> and(Result<U, E> result) {

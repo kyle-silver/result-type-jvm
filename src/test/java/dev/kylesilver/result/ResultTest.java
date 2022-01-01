@@ -164,25 +164,4 @@ class ResultTest {
         assertEquals(Result.ok(1), Result.err(0).orElse(err -> Result.ok(1)));
         assertEquals(Result.err(1), Result.err(0).orElse(err -> Result.err(1)));
     }
-
-    @Test
-    public void testMatchDocExample() {
-        Result<List<Integer>, String> parsed = Result.ok(Arrays.asList(1,2,3,4));
-        int validArgs = parsed.match(
-                List::size,
-                err -> {
-                    System.out.println("could not parse args");
-                    return 0;
-                }
-        );
-        assertEquals(4, validArgs);
-        parsed.match(
-                ok -> {
-                    System.out.println("ok " + ok.size());
-                },
-                err -> {
-                    System.out.println("err " + err);
-                }
-        );
-    }
 }
