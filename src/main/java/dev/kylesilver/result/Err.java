@@ -64,7 +64,7 @@ public class Err<T, E> implements Result<T, E> {
     }
 
     @Override
-    public <V> V match(Function<T, V> ifOk, Function<E, V> ifErr) {
+    public <U> U match(Function<T, U> ifOk, Function<E, U> ifErr) {
         return ifErr.apply(e);
     }
 
@@ -74,7 +74,7 @@ public class Err<T, E> implements Result<T, E> {
     }
 
     @Override
-    public <V> Result<V, E> map(Function<T, V> mapping) {
+    public <U> Result<U, E> map(Function<T, U> mapping) {
         return Result.err(e);
     }
 

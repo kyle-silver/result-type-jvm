@@ -78,11 +78,11 @@ public interface Result<T, E> {
      */
     <F extends Throwable> E expectErr(Function<T, F> mapping) throws F;
 
-    <V> V match(Function<T, V> ifOk, Function<E, V> ifErr);
+    <U> U match(Function<T, U> ifOk, Function<E, U> ifErr);
 
     void match(Consumer<T> ifOk, Consumer<E> ifErr);
 
-    <V> Result<V, E> map(Function<T, V> mapping);
+    <U> Result<U, E> map(Function<T, U> mapping);
 
     <F> Result<T, F> mapErr(Function<E, F>  mapping);
 }
