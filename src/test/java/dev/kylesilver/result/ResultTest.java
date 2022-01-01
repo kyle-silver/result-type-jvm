@@ -109,13 +109,14 @@ class ResultTest {
         // test match when it produces side effects
         AtomicInteger count = new AtomicInteger(2);
         Result.ok(1).match(
-                ok -> { count.addAndGet(1); },
-                err -> count.addAndGet(-1)
+                ok -> count.addAndGet(1),
+                err -> {}
         );
         assertEquals(3, count.get());
         Result.err(1).match(
-                ok -> { count.addAndGet(1); },
-                err -> count.addAndGet(-1));
+                ok -> {},
+                err -> count.addAndGet(-1)
+        );
         assertEquals(2, count.get());
     }
 
