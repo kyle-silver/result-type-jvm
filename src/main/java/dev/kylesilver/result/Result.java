@@ -218,6 +218,9 @@ public interface Result<T, E> {
      *     Result.<Integer, String>err("error").map(x -> x + 1).unwrapErr()
      * );
      * }</pre>
+     * If an exception is thrown while applying {@code mapping}, <strong>the
+     * exception will not be caught</strong>. Ensure that any lambda passed to
+     * this function does not throw any runtime exceptions.
      * @param mapping
      *      the transformation to apply to the wrapped value if the result is
      *      {@link Ok}.
@@ -243,6 +246,9 @@ public interface Result<T, E> {
      *     Result.ok(5).mapErr(err -> String.format("error: '%s'", err)).unwrap()
      * );
      * }</pre>
+     * If an exception is thrown while applying {@code mapping}, <strong>the
+     * exception will not be caught</strong>. Ensure that any lambda passed to
+     * this function does not throw any runtime exceptions.
      * @param mapping
      *      the transformation to apply to the wrapped value if the result is an
      *      {@link Err}.

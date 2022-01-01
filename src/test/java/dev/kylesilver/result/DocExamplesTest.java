@@ -31,13 +31,13 @@ public class DocExamplesTest {
     }
 
     @Test
-    public void testMapExamples() {
+    public void testMapExamples() throws UnwrapException {
         assertEquals(6, Result.ok(5).map(x -> x + 1).unwrap());
         assertEquals("error", Result.<Integer, String>err("error").map(x -> x + 1).unwrapErr());
     }
 
     @Test
-    public void testMapErrExamples() {
+    public void testMapErrExamples() throws UnwrapException {
         assertEquals(
                 "error: 'foo'",
                 Result.err("foo").mapErr(err -> String.format("error: '%s'", err)).unwrapErr()

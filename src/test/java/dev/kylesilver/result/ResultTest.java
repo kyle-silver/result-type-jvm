@@ -58,7 +58,7 @@ class ResultTest {
     }
 
     @Test
-    public void testExpect() {
+    public void testExpect() throws UnwrapException {
         // user-provided message
         assertEquals(1, Result.ok(1).expect("wasn't ok"));
         var unwrapException = assertThrows(
@@ -77,7 +77,7 @@ class ResultTest {
     }
 
     @Test
-    public void testExpectErr() {
+    public void testExpectErr() throws UnwrapException {
         // user-provided message
         assertEquals(1, Result.err(1).expectErr("wasn't ok"));
         var unwrapException = assertThrows(
@@ -121,7 +121,7 @@ class ResultTest {
     }
 
     @Test
-    public void testMap() {
+    public void testMap() throws UnwrapException {
         assertEquals("2", Result.ok(1).map(v -> v + 1).map(String::valueOf).unwrap());
         Result<Integer, Integer> result = Result.err(1);
         Result<String, Integer> mapped = result.map(v -> v + 1).map(String::valueOf);
@@ -129,7 +129,7 @@ class ResultTest {
     }
 
     @Test
-    public void testMapErr() {
+    public void testMapErr() throws UnwrapException {
         assertEquals("2", Result.err(1).mapErr(v -> v + 1).mapErr(String::valueOf).unwrapErr());
         Result<Integer, Integer> result = Result.ok(1);
         Result<Integer, String> mapped = result.mapErr(v -> v + 1).mapErr(String::valueOf);
