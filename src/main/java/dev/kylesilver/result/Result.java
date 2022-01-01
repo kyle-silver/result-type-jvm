@@ -47,27 +47,63 @@ public interface Result<T, E> {
         return new Err<>(e);
     }
 
+    /**
+     * @return <code>true</code> if the wrapper is {@link Ok}, otherwise <code>
+     *      false</code>.
+     */
     boolean isOk();
 
+    /**
+     * @return <code>true</code> if the wrapper is {@link Err}, otherwise <code>
+     *      false</code>.
+     */
     boolean isErr();
 
+    /**
+     * @return the underlying value if the result is {@link Ok}, otherwise the
+     *      value will be empty.
+     * @see Optional
+     */
     Optional<T> ok();
 
+    /**
+     * @return the underlying value if the result is an {@link Err}, otherwise
+     *      the value will be empty.
+     * @see Optional
+     */
     Optional<E> err();
 
+    /**
+     * Retrieve the {@link Ok} value or throw an exception if the result is an
+     * {@link Err}.
+     * @return
+     *      the value of {@link Ok} without an {@link Optional} wrapper.
+     * @throws UnwrapException
+     *      if the result is not {@link Ok}.
+     */
     T unwrap() throws UnwrapException;
 
+    /**
+     * Retrieve the {@link Err} value or throw an {@link UnwrapException} if the
+     * result is {@link Ok}. If the error is a {@link Throwable}, it will
+     * <strong>not</strong> be thrown. To throw a custom error, use
+     * {@link #expect(Function)}.
+     * @return
+     *      the value of {@link Err} without an {@link Optional} wrapper.
+     * @throws UnwrapException
+     *      if the result is not {@link Err}.
+     */
     E unwrapErr() throws UnwrapException;
 
     /**
-     * Return the value if Ok, otherwise throw an exception with a custom error
-     * message.
+     * Return the value if {@link Ok}, otherwise throw an exception with a
+     * custom error message.
      * @param errorMessage
-     *      The message to accompany the <code>UnwrapException</code> if thrown.
+     *      The message to accompany the {@link UnwrapException} if thrown.
      * @return
-     *      The value, if Ok.
+     *      The value, if {@link Ok}.
      * @throws UnwrapException
-     *      If the result is an Err.
+     *      If the result is an {@link Err}.
      */
     T expect(String errorMessage) throws UnwrapException;
 
@@ -78,21 +114,21 @@ public interface Result<T, E> {
      * @param <F>
      *      Type of the thrown exception.
      * @return
-     *      The value, if Ok.
+     *      The value, if {@link Ok}.
      * @throws F
-     *      Thrown if the result is an Err.
+     *      Thrown if the result is an {@link Err}.
      */
     <F extends Throwable> T expect(Function<E, F> mapping) throws F;
 
     /**
-     * Return the value if Err, otherwise throw an exception with a custom error
-     * message.
+     * Return the value if {@link Err}, otherwise throw an exception with a
+     * custom error message.
      * @param errorMessage
-     *      The message to accompany the <code>UnwrapException</code> if thrown.
+     *      The message to accompany the {@link UnwrapException} if thrown.
      * @return
-     *      The value, if Err.
+     *      The value, if {@link Err}.
      * @throws UnwrapException
-     *      If the result is Ok.
+     *      If the result is {@link Ok}.
      */
     E expectErr(String errorMessage) throws UnwrapException;
 
@@ -109,8 +145,63 @@ public interface Result<T, E> {
      */
     <F extends Throwable> E expectErr(Function<T, F> mapping) throws F;
 
+    /**
+     * Apply a transformation to the value of a result.
+     * <p>
+     * In the example below, the <code>parseArgs</code> function attempts to
+     * convert a user-provided string to a list of integers, but failing that
+     * returns its input unmodified. The output of the function is then used to
+     * determine the number of valid user-provided arguments and do some
+     * additional logging for convenience.
+     * <pre>{@code
+     * Result<List<Integer>, String> parsed = parseArgs(input);
+     * int validArgs = parsed.match(
+     *     ok -> ok.size(),
+     *     err -> {
+     *         log.warn("The provided input could not be parsed: \"{}\"", err);
+     *         return 0;
+     *     }
+     * );
+     * }</pre>
+     * Note that unlike {@link #map(Function)}, both the {@link Ok} and
+     * {@link Err} values must be mapped to a single output type.
+     * @param ifOk
+     *      the transformation that is applied to the underlying data if the
+     *      result is {@link Ok}.
+     * @param ifErr
+     *      the transformation that is applied to the underlying data if the
+     *      result is an {@link Err}.
+     * @param <U>
+     *      the type of the value to be returned after the transformations are
+     *      applied. Both transformations must converge to this type.
+     * @return
+     *      a value of type <code>U</code> after applying one of the two
+     *      provided transformations.
+     */
     <U> U match(Function<T, U> ifOk, Function<E, U> ifErr);
 
+    /**
+     * Apply a lambda with no return type to the value of a result.
+     * <p>
+     * This is useful for things which produce side effects such as logging. In
+     * contrast to {@link #match(Function, Function)}, no output can be obtained
+     * from an invocation of this method. In the example below, some
+     * informational logging is performed on the <code>parseArgs</code>
+     * function.
+     * <pre>{@code
+     * Result<List<Integer>, String> parsed = parseArgs(input);
+     * parsed.match(
+     *     ok -> log.info("args were parsed successfully: {}", ok),
+     *     err -> log.warn("The provided input could not be parsed: \"{}\"", err)
+     * );
+     * }</pre>
+     * @param ifOk
+     *      the lambda that is applied to the underlying data if the result is
+     *      {@link Ok}.
+     * @param ifErr
+     *      the lambda that is applied to the underlying data if the result is
+     *      an {@link Err}.
+     */
     void match(Consumer<T> ifOk, Consumer<E> ifErr);
 
     <U> Result<U, E> map(Function<T, U> mapping);
