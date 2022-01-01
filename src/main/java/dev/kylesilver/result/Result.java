@@ -233,6 +233,7 @@ public interface Result<T, E> {
      * Apply a transformation to the wrapped value if the result is an
      * {@link Err}. If the result is {@link Ok}, no transformation will be
      * applied.
+     * <pre>{@code
      * assertEquals(
      *     "error: 'foo'",
      *      Result.err("foo").mapErr(err -> String.format("error: '%s'", err)).unwrapErr()
@@ -241,6 +242,7 @@ public interface Result<T, E> {
      *     5,
      *     Result.ok(5).mapErr(err -> String.format("error: '%s'", err)).unwrap()
      * );
+     * }</pre>
      * @param mapping
      *      the transformation to apply to the wrapped value if the result is an
      *      {@link Err}.
