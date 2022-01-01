@@ -1,11 +1,15 @@
 package dev.kylesilver.result;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+@ToString
+@EqualsAndHashCode
 public class Ok<T, E> implements Result<T, E> {
     private final T t;
 

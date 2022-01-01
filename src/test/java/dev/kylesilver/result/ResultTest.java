@@ -59,40 +59,38 @@ class ResultTest {
     public void testExpect() {
         // user-provided message
         assertEquals(1, Result.ok(1).expect("wasn't ok"));
-        try {
-            Result.err(1).expect("wasn't ok");
-            fail();
-        } catch (UnwrapException e) {
-            assertEquals("wasn't ok", e.getMessage());
-        }
+        var unwrapException = assertThrows(
+                UnwrapException.class,
+                () -> Result.err(1).expect("wasn't ok")
+        );
+        assertEquals("wasn't ok", unwrapException.getMessage());
+
         // custom exception
         assertEquals(1, Result.ok(1).expect(e -> new IllegalArgumentException("foo")));
-        try {
-            Result.err(1).expect(e -> new IllegalArgumentException(e.toString()));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("1", e.getMessage());
-        }
+        var illegalArgumentException = assertThrows(
+                IllegalArgumentException.class,
+                () -> Result.err(1).expect(e -> new IllegalArgumentException(e.toString()))
+        );
+        assertEquals("1", illegalArgumentException.getMessage());
     }
 
     @Test
     public void testExpectErr() {
         // user-provided message
         assertEquals(1, Result.err(1).expectErr("wasn't ok"));
-        try {
-            Result.ok(1).expectErr("wasn't ok");
-            fail();
-        } catch (UnwrapException e) {
-            assertEquals("wasn't ok", e.getMessage());
-        }
+        var unwrapException = assertThrows(
+                UnwrapException.class,
+                () -> Result.ok(1).expectErr("wasn't err")
+        );
+        assertEquals("wasn't err", unwrapException.getMessage());
+
         // custom exception
         assertEquals(1, Result.err(1).expectErr(e -> new IllegalArgumentException("foo")));
-        try {
-            Result.ok(1).expectErr(e -> new IllegalArgumentException(e.toString()));
-            fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("1", e.getMessage());
-        }
+        var illegalArgumentException = assertThrows(
+                IllegalArgumentException.class,
+                () -> Result.ok(1).expectErr(e -> new IllegalArgumentException(e.toString()))
+        );
+        assertEquals("1", illegalArgumentException.getMessage());
     }
 
     @Test
@@ -134,5 +132,34 @@ class ResultTest {
         Result<Integer, Integer> result = Result.ok(1);
         Result<Integer, String> mapped = result.mapErr(v -> v + 1).mapErr(String::valueOf);
         assertEquals(1, mapped.unwrap());
+    }
+
+    @Test
+    public void testAnd() {
+        assertEquals(Result.err(1), Result.ok(0).and(Result.err(1)));
+        assertEquals(Result.ok(1), Result.ok(0).and(Result.ok(1)));
+        assertEquals(Result.err(0), Result.err(0).and(Result.err(1)));
+        assertEquals(Result.ok(1), Result.ok(0).and(Result.ok(1)));
+    }
+
+    @Test
+    public void testAndThen() {
+        assertEquals(Result.ok(1), Result.ok(0).andThen(ok -> Result.ok(ok + 1)));
+        assertEquals(Result.err(1), Result.ok(0).andThen(ok -> Result.err(ok + 1)));
+        assertEquals(Result.err(0), Result.err(0).andThen(Result::ok));
+    }
+
+    @Test
+    public void testOr() {
+        assertEquals(Result.ok(0), Result.ok(0).or(Result.ok(1)));
+        assertEquals(Result.ok(1), Result.err(0).or(Result.ok(1)));
+        assertEquals(Result.err(1), Result.err(0).or(Result.err(1)));
+    }
+
+    @Test
+    public void testOrElse() {
+        assertEquals(Result.ok(1), Result.ok(1).orElse(err -> Result.ok(0)));
+        assertEquals(Result.ok(1), Result.err(0).orElse(err -> Result.ok(1)));
+        assertEquals(Result.err(1), Result.err(0).orElse(err -> Result.err(1)));
     }
 }
