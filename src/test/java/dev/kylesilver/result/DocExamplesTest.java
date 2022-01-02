@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -13,7 +12,7 @@ public class DocExamplesTest {
 
     @Test
     public void testMatchDocExamples() {
-        Result<List<Integer>, String> parsed = Result.ok(Arrays.asList(1,2,3,4));
+        Result<List<Integer>, String> parsed = Result.ok(Arrays.asList(1, 2, 3, 4));
         int validArgs = parsed.match(
                 List::size,
                 err -> {
@@ -67,12 +66,40 @@ public class DocExamplesTest {
     }
 
     @Test
-    public void testAndThenExample() throws UnwrapException {
+    public void testAndThenExamples() throws UnwrapException {
         Result<Integer, RuntimeException> result = Result.<String, RuntimeException>ok("hi")
                 .andThen(ok -> Result.err(new NumberFormatException("foo")));
         assertInstanceOf(NumberFormatException.class, result.unwrapErr());
         Result<Result<Integer, NumberFormatException>, RuntimeException> awkward =
                 Result.<String, RuntimeException>ok("hi").map(ok -> Result.err(new NumberFormatException("foo")));
         assertInstanceOf(NumberFormatException.class, awkward.unwrap().unwrapErr());
+    }
+
+    @Test
+    public void testOrExamples() {
+        assertEquals(
+                Result.ok("success"),
+                Result.err("error").or(Result.ok("success"))
+        );
+        assertEquals(
+                Result.ok("first"),
+                Result.ok("first").or(Result.ok("second"))
+        );
+        assertEquals(
+                Result.err("second"),
+                Result.err("first").or(Result.err("second"))
+        );
+    }
+
+    @Test
+    public void testOrElseExamples() {
+        assertEquals(
+                Result.ok("recovered from err: foo"),
+                Result.err("foo").orElse(err -> Result.ok("recovered from err: " + err))
+        );
+        assertEquals(
+                Result.ok("no error"),
+                Result.ok("no error").orElse(err -> Result.ok("recovered from err: " + err))
+        );
     }
 }

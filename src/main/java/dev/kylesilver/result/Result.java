@@ -281,7 +281,7 @@ public interface Result<T, E> {
      * @param <U>
      *      the type of the {@link Ok} value in the new result.
      * @return
-     *      either the original error or the caller-provided result.
+     *      either the original error or the caller-provided {@code Result}.
      */
     <U> Result<U, E> and(Result<U, E> result);
 
@@ -311,11 +311,56 @@ public interface Result<T, E> {
      * @param <U>
      *      the output type of {@code resultFn}.
      * @return
-     *      Either the output of {@code resultFn} or the original error.
+     *      either the output of {@code resultFn} or the original error.
      */
     <U> Result<U, E> andThen(Function<T, Result<U, E>> resultFn);
 
+    /**
+     * Returns the provided argument if the result is an {@link Err} and
+     * propagates the original {@link Ok} value otherwise.
+     * <pre>{@code
+     * assertEquals(
+     *     Result.ok("success"),
+     *     Result.err("error").or(Result.ok("success"))
+     * );
+     * assertEquals(
+     *     Result.ok("first"),
+     *     Result.ok("first").or(Result.ok("second"))
+     * );
+     * assertEquals(
+     *     Result.err("second"),
+     *     Result.err("first").or(Result.err("second"))
+     * );
+     * }</pre>
+     * @param result
+     *      the value to be returned if the result is an {@link Err}.
+     * @param <F>
+     *      the type of the {@link Err} value in the new result.
+     * @return
+     *      either the original value or the caller-provided {@code Result}.
+     */
     <F> Result<T, F> or(Result<T, F> result);
 
+    /**
+     * Apply a fallible operation to the wrapped value if the result is an
+     * {@link Err}. If the result is {@link Ok}, the value is propagated to the
+     * next operation in the chain.
+     * <pre>{@code
+     * assertEquals(
+     *     Result.ok("recovered from err: foo"),
+     *     Result.err("foo").orElse(err -> Result.ok("recovered from err: " + err))
+     * );
+     * assertEquals(
+     *     Result.ok("no error"),
+     *     Result.ok("no error").orElse(err -> Result.ok("recovered from err: " + err))
+     * );
+     * }</pre>
+     * @param resultFn
+     *      the function to be applied if the result is an {@link Err}.
+     * @param <F>
+     *      the type of the {@link Err} value in the new result.
+     * @return
+     *      either the output of {@code resultFn} or the original value.
+     */
     <F> Result<T, F> orElse(Function<E, Result<T, F>> resultFn);
 }
