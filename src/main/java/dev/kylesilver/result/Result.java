@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 public interface Result<T, E> {
 
@@ -264,6 +263,34 @@ public interface Result<T, E> {
         return this.match(ok -> result, Result::err);
     }
 
+    /**
+     * Apply a fallible operation to the wrapped value if the result is
+     * {@link Ok}. If the result is an {@link Err}, the error is propagated to
+     * the next operation in the chain.
+     * <p>
+     * This operation differs from {@link #map(Function) map} in that if the
+     * value yielded by the provided fallible operation is an error, it is
+     * returned without being wrapped in a redundant, enclosing {@link Result}.
+     * Take, for example, two functions: {@code getUserInput()} which returns a
+     * {@code Result<String, RuntimeException>} and
+     * {@code parseInt(String s)} which returns a
+     * {@code Result<Integer, NumberFormatException>}. A chain of operations
+     * could be built up as follows:
+     * <pre>{@code
+     * Result<Integer, RuntimeException> result = getUserInput().andThen(parseInt);
+     * }</pre>
+     * If {@link #map(Function) map} had been used instead, the chain would have
+     * looked like:
+     * <pre>{@code
+     * Result<Result<Integer, NumberFormatException>, NoSuchElementException> result = getUserInput().map(parseInt);
+     * }</pre>
+     * @param resultFn
+     *      the function to be applied if the result is {@link Ok}.
+     * @param <U>
+     *      the output type of {@code resultFn}.
+     * @return
+     *      Either the output of {@code resultFn} or the original error.
+     */
     default <U> Result<U, E> andThen(Function<T, Result<U, E>> resultFn) {
         return this.match(resultFn, Result::err);
     }

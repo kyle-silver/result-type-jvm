@@ -4,8 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 public class DocExamplesTest {
 
@@ -46,5 +48,15 @@ public class DocExamplesTest {
                 5,
                 Result.ok(5).mapErr(err -> String.format("error: '%s'", err)).unwrap()
         );
+    }
+
+    @Test
+    public void testAndThenExample() throws UnwrapException {
+        Result<Integer, RuntimeException> result = Result.<String, RuntimeException>ok("hi")
+                .andThen(ok -> Result.err(new NumberFormatException("foo")));
+        assertInstanceOf(NumberFormatException.class, result.unwrapErr());
+        Result<Result<Integer, NumberFormatException>, RuntimeException> awkward =
+                Result.<String, RuntimeException>ok("hi").map(ok -> Result.err(new NumberFormatException("foo")));
+        assertInstanceOf(NumberFormatException.class, awkward.unwrap().unwrapErr());
     }
 }
