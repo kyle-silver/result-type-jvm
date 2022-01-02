@@ -58,12 +58,12 @@ public class Err<T, E> implements Result<T, E> {
     }
 
     @Override
-    public E expectErr(String errorMessage) throws UnwrapException {
+    public E expectErr(String errorMessage) {
         return e;
     }
 
     @Override
-    public <F extends Throwable> E expectErr(Function<T, F> mapping) throws F {
+    public <F extends Throwable> E expectErr(Function<T, F> mapping) {
         return e;
     }
 
@@ -85,5 +85,27 @@ public class Err<T, E> implements Result<T, E> {
     @Override
     public <F> Result<T, F> mapErr(Function<E, F> mapping) {
         return Result.err(mapping.apply(e));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <U> Result<U, E> and(Result<U, E> result) {
+        return (Err<U, E>) this;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <U> Result<U, E> andThen(Function<T, Result<U, E>> resultFn) {
+        return (Err<U, E>) this;
+    }
+
+    @Override
+    public <F> Result<T, F> or(Result<T, F> result) {
+        return result;
+    }
+
+    @Override
+    public <F> Result<T, F> orElse(Function<E, Result<T, F>> resultFn) {
+        return resultFn.apply(e);
     }
 }

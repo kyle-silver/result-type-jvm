@@ -259,9 +259,7 @@ public interface Result<T, E> {
      */
     <F> Result<T, F> mapErr(Function<E, F>  mapping);
 
-    default <U> Result<U, E> and(Result<U, E> result) {
-        return this.match(ok -> result, Result::err);
-    }
+    <U> Result<U, E> and(Result<U, E> result);
 
     /**
      * Apply a fallible operation to the wrapped value if the result is
@@ -291,15 +289,9 @@ public interface Result<T, E> {
      * @return
      *      Either the output of {@code resultFn} or the original error.
      */
-    default <U> Result<U, E> andThen(Function<T, Result<U, E>> resultFn) {
-        return this.match(resultFn, Result::err);
-    }
+    <U> Result<U, E> andThen(Function<T, Result<U, E>> resultFn);
 
-    default <F> Result<T, F> or(Result<T, F> result) {
-        return this.match(Result::ok, err -> result);
-    }
+    <F> Result<T, F> or(Result<T, F> result);
 
-    default <F> Result<T, F> orElse(Function<E, Result<T, F>> resultFn) {
-        return this.match(Result::ok, resultFn);
-    }
+    <F> Result<T, F> orElse(Function<E, Result<T, F>> resultFn);
 }
