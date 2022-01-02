@@ -269,7 +269,11 @@ public interface Result<T, E> {
      * );
      * assertEquals(
      *     Result.err("second error"),
-     *     Result.ok(1).and(Result.err("second error")
+     *     Result.ok(1).and(Result.err("second error"))
+     * );
+     * assertEquals(
+     *     Result.ok(2),
+     *     Result.ok("success").and(Result.ok(2))
      * );
      * }</pre>
      * @param result
