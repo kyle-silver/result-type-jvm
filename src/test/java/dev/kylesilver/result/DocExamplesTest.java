@@ -51,6 +51,18 @@ public class DocExamplesTest {
     }
 
     @Test
+    public void testAndExamples() {
+        assertEquals(
+                Result.err("first error"),
+                Result.err("first error").and(Result.err("second error"))
+        );
+        assertEquals(
+                Result.err("second error"),
+                Result.ok(1).and(Result.err("second error"))
+        );
+    }
+
+    @Test
     public void testAndThenExample() throws UnwrapException {
         Result<Integer, RuntimeException> result = Result.<String, RuntimeException>ok("hi")
                 .andThen(ok -> Result.err(new NumberFormatException("foo")));

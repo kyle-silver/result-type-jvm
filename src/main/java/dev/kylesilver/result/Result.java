@@ -259,6 +259,26 @@ public interface Result<T, E> {
      */
     <F> Result<T, F> mapErr(Function<E, F>  mapping);
 
+    /**
+     * Returns the provided argument if the result is {@link Ok} and propagates
+     * the original {@link Err} otherwise.
+     * <pre>{@code
+     * assertEquals(
+     *     Result.err("first error"),
+     *     Result.err("first error").and(Result.err("second error"))
+     * );
+     * assertEquals(
+     *     Result.err("second error"),
+     *     Result.ok(1).and(Result.err("second error")
+     * );
+     * }</pre>
+     * @param result
+     *      the value to be returned if the result is {@link Ok}.
+     * @param <U>
+     *      the type of the {@link Ok} value in the new result.
+     * @return
+     *      either the original error or the caller-provided result.
+     */
     <U> Result<U, E> and(Result<U, E> result);
 
     /**
