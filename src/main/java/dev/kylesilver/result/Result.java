@@ -385,4 +385,17 @@ public interface Result<T, E> {
      *      either the output of {@code resultFn} or the original value.
      */
     <F> Result<T, F> orElse(Function<E, Result<T, F>> resultFn);
+
+    static <T, E extends Throwable> Result<T, E> tryOr(CheckedSupplier<T, E> supplier, Class<E> cls) {
+        try {
+            return Result.ok(supplier.get());
+        } catch (Throwable f) {
+            try {
+                E thrown = cls.cast(f);
+                return Result.err(thrown);
+            } catch (ClassCastException e) {
+                throw new RuntimeException("Thrown exception was of an unexpected type", e);
+            }
+        }
+    }
 }

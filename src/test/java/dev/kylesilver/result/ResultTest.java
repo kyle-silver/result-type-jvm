@@ -162,4 +162,26 @@ class ResultTest {
         assertEquals(Result.ok(1), Result.err(0).orElse(err -> Result.ok(1)));
         assertEquals(Result.err(1), Result.err(0).orElse(err -> Result.err(1)));
     }
+
+    @Test
+    public void testTryOr() throws UnwrapException {
+        // happy path
+        assertEquals(Result.ok(1), Result.tryOr(() -> 1, RuntimeException.class));
+
+        // it throws an exception that we expected
+        Result<Integer, RuntimeException> result = Result.tryOr(
+                () -> { throw new RuntimeException("it failed"); },
+                RuntimeException.class
+        );
+        assertInstanceOf(RuntimeException.class, result.unwrapErr());
+        assertEquals("it failed", result.unwrapErr().getMessage());
+
+        // it throws an unexpected exception
+        assertThrows(RuntimeException.class, () -> Result.tryOr(
+                () -> {
+                    throw new NumberFormatException("unexpected error");
+                },
+                ArithmeticException.class
+        ));
+    }
 }
