@@ -6,6 +6,20 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * A result type represents the output of an operation with two possible
+ * outcomes. The operation can either yield an {@link Ok}, in which case it was
+ * performed successfully and without any errors, or it can be an {@link Err},
+ * meaning that something unexpected or invalid occurred. This could be anything
+ * from a user supplying an incorrect value to a network connection closing
+ * unexpectedly.
+ * <p>
+ * Normally JVM languages would handle these conditions with exceptions, but
+ * doing so can lead to control flow which is difficult to keep track of. With
+ * a result type, all conditions are covered by virtue of being correctly typed.
+ * @param <T>
+ * @param <E>
+ */
 public interface Result<T, E> {
 
     /**
@@ -48,18 +62,21 @@ public interface Result<T, E> {
     }
 
     /**
+     * Indicates whether the wrapped value is an {@link Ok}.
      * @return <code>true</code> if the wrapper is {@link Ok}, otherwise <code>
      *      false</code>.
      */
     boolean isOk();
 
     /**
+     * Indicates whether the wrapped value is an {@link Err}.
      * @return <code>true</code> if the wrapper is {@link Err}, otherwise <code>
      *      false</code>.
      */
     boolean isErr();
 
     /**
+     * Get the {@link Ok} value if it exists.
      * @return the underlying value if the result is {@link Ok}, otherwise the
      *      value will be empty.
      * @see Optional
@@ -67,6 +84,7 @@ public interface Result<T, E> {
     Optional<T> ok();
 
     /**
+     * Get the {@link Err} value if it exists.
      * @return the underlying value if the result is an {@link Err}, otherwise
      *      the value will be empty.
      * @see Optional
