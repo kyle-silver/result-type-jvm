@@ -8,6 +8,14 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * Indicates that an operation has failed.
+ * @param <T>
+ *      The type of the value that would have (but in this case, did not) been
+ *      yielded by the parent operation if it had succeeded.
+ * @param <E>
+ *      The type of the value wrapped by this class.
+ */
 @ToString
 @EqualsAndHashCode
 public class Err<T, E> implements Result<T, E> {

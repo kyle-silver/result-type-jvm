@@ -8,6 +8,14 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * Indicates that an operation has been completed successfully.
+ * @param <T>
+ *      The type of the value wrapped by this class.
+ * @param <E>
+ *      The type of an {@link Err} that could have (but in this case did not)
+ *      resulted from the parent operation.
+ */
 @ToString
 @EqualsAndHashCode
 public class Ok<T, E> implements Result<T, E> {

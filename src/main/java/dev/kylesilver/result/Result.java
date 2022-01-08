@@ -18,7 +18,11 @@ import java.util.function.Function;
  * doing so can lead to control flow which is difficult to keep track of. With
  * a result type, all conditions are covered by virtue of being correctly typed.
  * @param <T>
+ *      The type of an {@link Ok} value, meaning that the operation has
+ *      completed successfully.
  * @param <E>
+ *      The type of an {@link Err} value, meaning that the operation has failed
+ *      with some kind of error.
  */
 public interface Result<T, E> {
 
