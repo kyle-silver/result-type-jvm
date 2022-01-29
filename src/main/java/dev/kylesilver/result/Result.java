@@ -386,6 +386,26 @@ public interface Result<T, E> {
      */
     <F> Result<T, F> orElse(Function<E, Result<T, F>> resultFn);
 
+    /**
+     * Attempts to execute a fallible operation and returns a thrown exception
+     * as an error type.
+     * @param supplier
+     *      A lambda that will be evaluated at runtime to either yield a result
+     *      or throw an exception
+     * @param cls
+     *      The class than the exception will be cast to if thrown. This is
+     *      required because java cannot be generic over exceptions. If the
+     *      caught exception cannot be case to this class, a runtime exception
+     *      will be thrown and the original.
+     * @param <T>
+     *      The type of the result value if no exception is thrown.
+     * @param <E>
+     *      The type of the result value if an exception is thrown by the
+     *      provided function/
+     * @return
+     *      either the output of the provided supplier or a caught exception
+     *      that was thrown during its evaluation.
+     */
     static <T, E extends Throwable> Result<T, E> tryOr(CheckedSupplier<T, E> supplier, Class<E> cls) {
         try {
             return Result.ok(supplier.get());
@@ -394,7 +414,7 @@ public interface Result<T, E> {
                 E thrown = cls.cast(f);
                 return Result.err(thrown);
             } catch (ClassCastException e) {
-                throw new RuntimeException("Thrown exception was of an unexpected type", e);
+                throw new ErrorTypeMismatchException(cls, f);
             }
         }
     }

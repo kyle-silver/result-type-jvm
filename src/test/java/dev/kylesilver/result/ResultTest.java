@@ -56,7 +56,7 @@ class ResultTest {
     }
 
     @Test
-    public void testExpect() throws UnwrapException {
+    public void testExpect() {
         // user-provided message
         assertEquals(1, Result.ok(1).expect("wasn't ok"));
         var unwrapException = assertThrows(
@@ -75,7 +75,7 @@ class ResultTest {
     }
 
     @Test
-    public void testExpectErr() throws UnwrapException {
+    public void testExpectErr() {
         // user-provided message
         assertEquals(1, Result.err(1).expectErr("wasn't ok"));
         var unwrapException = assertThrows(
@@ -177,7 +177,7 @@ class ResultTest {
         assertEquals("it failed", result.unwrapErr().getMessage());
 
         // it throws an unexpected exception
-        assertThrows(RuntimeException.class, () -> Result.tryOr(
+        assertThrows(ErrorTypeMismatchException.class, () -> Result.tryOr(
                 () -> {
                     throw new NumberFormatException("unexpected error");
                 },
