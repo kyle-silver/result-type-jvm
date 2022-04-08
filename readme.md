@@ -37,7 +37,7 @@ String result = result1.map(x -> Integer.toString(x)).unwrap();
 
 // but not to errors
 Result<Integer, String> result2 = Result.err("whoops!");
-result1.map(x -> Integer.toString(x)).isErr(); // true
+result2.map(x -> Integer.toString(x)).isErr(); // true
 ```
 
 You can use `match` to apply more complex manipulations to the result of an operation.
