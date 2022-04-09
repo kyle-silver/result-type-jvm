@@ -25,7 +25,7 @@ int value = result.unwrap();
 You can also substitute a default value in the event of an error
 
 ```java
-int value = result.ok().orElse(0);
+int value = result.err().orElse(0);
 ```
 
 And you can also apply stream-style maps which are only applied to the value if it is `Ok`
