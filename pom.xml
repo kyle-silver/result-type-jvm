@@ -6,7 +6,7 @@
 
     <groupId>dev.kylesilver</groupId>
     <artifactId>result-type-jvm</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.1</version>
 
     <dependencies>
         <dependency>
