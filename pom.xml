@@ -8,6 +8,33 @@
     <artifactId>result-type-jvm</artifactId>
     <version>0.1.1</version>
 
+    <!-- required by Nexus -->
+    <name>Result Type</name>
+    <description>An ergonomic, Rust-inspired result type for JVM languages</description>
+    <url>https://github.com/kyle-silver/result-type-jvm</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Kyle Silver</name>
+            <email>kyleasilver@gmail.com</email>
+            <organization>Kyle Silver</organization>
+            <organizationUrl>https://github.com/kyle-silver</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/kyle-silver/result-type-jvm.git</connection>
+        <developerConnection>scm:git:ssh://github.com:kyle-silver/result-type-jvm.git</developerConnection>
+        <url>http://github.com/kyle-silver/result-type-jvm/tree/main</url>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>org.jetbrains</groupId>
