@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ResultTest {
+public class ResultTest {
 
     @Test
     public void testIsOk() {
