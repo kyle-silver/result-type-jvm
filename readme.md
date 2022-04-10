@@ -53,4 +53,4 @@ int computed = result.match(
 );
 ```
 
-There's a lot more that you can do with Result types, check out the docs for more details.
+There's a lot more that you can do with Result types, check out the [docs](https://kyle-silver.github.io/result-type-jvm/dev/kylesilver/result/Result.html) for more details.
