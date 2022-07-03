@@ -2,6 +2,25 @@
 
 This package contains a small, composable Result type heavily inspired by Rust. It provides ergonomic and robust error handling and leverages Java's type system to make uncaught runtime exceptions a thing of the past.
 
+## Installation
+
+This package can be found on [Maven Central](https://search.maven.org/artifact/dev.kylesilver/result-type-jvm). For POM files, add the following:
+
+```xml
+<dependency>
+  <groupId>dev.kylesilver</groupId>
+  <artifactId>result-type-jvm</artifactId>
+  <version>0.1.2</version>
+</dependency>
+```
+
+For Gradle projects, use:
+
+```groovy
+implementation 'dev.kylesilver:result-type-jvm:0.1.2'
+```
+
+
 ## Usage
 
 A `Result` type indicates that a value is either a success `Ok` or an error `Err`. Before accessing the value inside, you must inspect the `Result` to determine which of the two possible outcomes have occurred.
